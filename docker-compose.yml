@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  test-nipa-api:
+    build: ./test-nipa-api
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: P%40ssw0rd
+      POSTGRES_HOST: postgres-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: test-nipa
+    volumes:
+      - ./test-nipa-api:/code/app
+
+  test-nipa-web:
+    build: ./test-nipa-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./test-nipa-web/src:/app/src
+      - ./test-nipa-web/public:/app/public
+    depends_on:
+      - test-nipa-api
+
+  # postgres database, data is persisted in a volume
+  postgres-db:
+    image: postgres:14.5-alpine
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "P@ssw0rd"
+      POSTGRES_DB: "test-nipa"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
