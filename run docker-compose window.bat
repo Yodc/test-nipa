@@ -1,1 +1,1 @@
-docker-compose build --no-cache -d
+docker compose up --build -d
