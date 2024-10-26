@@ -137,9 +137,7 @@ export default function PageRoom() {
                     title: record.title,
                     desc: record.desc,
                     contract_info: record.contract_info,
-                  })
-                  form.setFieldsValue({
-                    status_id: record.status_name
+                    status_id: record.status_id
                   })
                   showModal()
                 }}
@@ -205,6 +203,7 @@ export default function PageRoom() {
           visible={isModalVisible}
           onOk={async () => {
             let value = form.getFieldValue()
+            console.log(value)
             if (actionId) {
               await updateTicketApi(value, actionId)
             } else {
@@ -220,16 +219,6 @@ export default function PageRoom() {
           <Spin spinning={loadingPage} tip="Loading...">
             <Form
               form={form}
-              onFinish={async (value) => {
-                if (actionId) {
-                  await updateTicketApi(value, actionId)
-                } else {
-                  await createTicketApi(value)
-                }
-                await _list()
-                setLoadingPage(false)
-                setIsModalVisible(false)
-              }}
             >
               <Form.Item
                 label="title"
